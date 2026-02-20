@@ -1,3 +1,4 @@
+// /Users/oystein/nettsider/remoyventures-v2-feb-26/src/components/ContactForm.tsx
 "use client";
 
 import { useState } from "react";
@@ -10,10 +11,14 @@ export default function ContactForm() {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    // ✅ Ta vare på form-referansen før await (e.currentTarget kan bli null etter await)
+    const form = e.currentTarget;
+
     setState("sending");
     setMsg("");
 
-    const fd = new FormData(e.currentTarget);
+    const fd = new FormData(form);
     const payload = Object.fromEntries(fd.entries());
 
     try {
@@ -28,7 +33,9 @@ export default function ContactForm() {
 
       setState("sent");
       setMsg("Takk! Meldingen er sendt. Jeg svarer deg snart.");
-      e.currentTarget.reset();
+
+      // ✅ reset funker stabilt nå
+      form.reset();
     } catch (err: any) {
       setState("error");
       setMsg(err?.message || "Noe gikk galt. Prøv igjen.");
@@ -47,6 +54,7 @@ export default function ContactForm() {
             placeholder="Fornavn og etternavn"
           />
         </div>
+
         <div>
           <label className="text-xs font-extrabold text-slate-600">E-post</label>
           <input
@@ -87,18 +95,18 @@ export default function ContactForm() {
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <button
-          type="submit"
-          className="btn btn-mint"
-          disabled={state === "sending"}
-        >
+        <button type="submit" className="btn btn-mint" disabled={state === "sending"}>
           {state === "sending" ? "Sender…" : "Send forespørsel"}
         </button>
 
         {msg && (
           <div
             className={`text-sm ${
-              state === "sent" ? "text-emerald-700" : state === "error" ? "text-red-700" : "text-slate-700"
+              state === "sent"
+                ? "text-emerald-700"
+                : state === "error"
+                  ? "text-red-700"
+                  : "text-slate-700"
             }`}
           >
             {msg}
