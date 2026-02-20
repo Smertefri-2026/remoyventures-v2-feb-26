@@ -45,26 +45,32 @@ export default function Section5Smooday() {
             </div>
           </div>
 
-          {/* Image (mobil: nederst, md+: venstre) */}
-          <div className="order-2 md:order-1 flex justify-center">
-            <div className="w-full max-w-40">
-              <div className="rounded-2xl border border-[rgba(2,6,23,0.10)] bg-[#F3E8DA] p-3 shadow-sm">
-                <div className="relative aspect-195/422 overflow-hidden rounded-xl bg-white">
-                  <Image
-                    src="/Smood.day.png"
-                    alt="Smood.day – mobilvisning"
-                    fill
-                    className="object-cover object-top"
-                    sizes="(max-width: 768px) 90vw, 360px"
-                    priority={false}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
 
+{/* Image (med telefonramme fra PNG) */}
+<div className="order-2 md:order-1 flex justify-center">
+  <div className="w-full max-w-40">
+    <div
+      className="relative aspect-740/1508 overflow-hidden"
+      style={{
+        borderRadius: 20,
+        WebkitMaskImage: "radial-gradient(white 96%, transparent 100%)",
+        maskImage: "radial-gradient(white 96%, transparent 100%)",
+      }}
+    >
+      <Image
+        src="/Smood.day2.png"
+        alt="Smood.day – mobilvisning"
+        fill
+        className="object-contain drop-shadow-[0_20px_60px_rgba(2,6,23,0.25)]"
+        sizes="(max-width: 768px) 85vw, 360px"
+        priority={false}
+      />
+    </div>
+  </div>
+</div>
+                </div>
         </div>
-      </div>
+
     </section>
   );
 }
