@@ -1,4 +1,5 @@
 import PublicHeader from "@/components/shell/PublicHeader";
+import PublicFooter from "@/components/shell/PublicFooter";
 
 import Section1Hero from "@/app/sections/Section1Hero";
 import Section2Intro from "@/app/sections/Section2Intro";
@@ -12,8 +13,10 @@ import Section8Contact from "@/app/sections/Section8Contact";
 export default function Home() {
   return (
     <main className="min-h-screen">
+      <div id="top" />
       <PublicHeader />
 
+      {/* ✅ Kun innholdet er boxed */}
       <div className="mx-auto w-full max-w-6xl px-6">
         <Section1Hero />
         <Section2Intro />
@@ -24,6 +27,9 @@ export default function Home() {
         <Section7Investors />
         <Section8Contact />
       </div>
+
+      {/* ✅ Footer utenfor wrapper = full width */}
+      <PublicFooter />
     </main>
   );
 }
