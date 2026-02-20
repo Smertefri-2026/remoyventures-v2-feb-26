@@ -17,22 +17,41 @@ export default function PublicHeader({
 }) {
   const [open, setOpen] = useState(false);
 
+  const headerRef = useRef<HTMLElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const btnRef = useRef<HTMLButtonElement | null>(null);
 
-  // 🔧 viktig: må matche css scroll-padding-top (vi bruker 80px)
-  const HEADER_OFFSET = 80;
+  const pendingHashRef = useRef<string | null>(null);
 
-  // Når du klikker i mobilmenyen: lukk først, scroll etterpå
-  const pendingHrefRef = useRef<string | null>(null);
+  const getHeaderOffset = () => {
+    const h = headerRef.current?.getBoundingClientRect().height ?? 56;
+    return Math.round(h + 10); // litt luft under header
+  };
 
-  const scrollToHash = (href: string) => {
-    const id = href.replace("#", "");
+  const scrollToId = (id: string) => {
+    if (!id || id === "top") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
     const el = document.getElementById(id);
     if (!el) return;
 
-    const y = el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
-    window.scrollTo({ top: y, behavior: "smooth" });
+    const y = el.getBoundingClientRect().top + window.scrollY - getHeaderOffset();
+    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+  };
+
+  const go = (href: string) => {
+    if (href === "#top") {
+      scrollToId("top");
+      return;
+    }
+    if (!href.startsWith("#")) return;
+
+    const id = href.slice(1);
+    // Oppdater URL hash (så “delbar” lenke funker)
+    window.history.pushState(null, "", href);
+    scrollToId(id);
   };
 
   const handleNav = (href: string) => (e: React.MouseEvent) => {
@@ -40,58 +59,41 @@ export default function PublicHeader({
 
     e.preventDefault();
 
-    // Oppdater URL uten å trigge native "jump"
-    if (typeof window !== "undefined") {
-      window.history.pushState(null, "", href);
-    }
-
-    // På mobil: lukk meny først, scroll etter at layout har oppdatert seg
+    // Hvis menyen er åpen på mobil: lukk først, scroll etterpå
     if (open) {
-      pendingHrefRef.current = href;
+      pendingHashRef.current = href;
       setOpen(false);
       return;
     }
 
-    // Desktop / når menyen allerede er lukket
-    scrollToHash(href);
+    go(href);
   };
 
-  // ✅ Etter at mobilmenyen har lukket seg: scroll (stabilt på mobil)
+  // Etter at mobilmeny er lukket: scroll (etter animasjon/layout)
   useEffect(() => {
     if (open) return;
-    const href = pendingHrefRef.current;
+
+    const href = pendingHashRef.current;
     if (!href) return;
 
-    pendingHrefRef.current = null;
+    pendingHashRef.current = null;
 
-    // Vent 1-2 frames så DOM/layout er oppdatert etter at menyen har kollapset
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        scrollToHash(href);
-      });
-    });
+    // vent litt så max-height/opacity animasjonen er ferdig og header-høyden er stabil
+    const t = window.setTimeout(() => go(href), 220);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  // ✅ Hvis du lander direkte på /#kontakt etc.
-  useEffect(() => {
-    const hash = window.location.hash;
-    if (!hash) return;
-
-    // gi siden litt tid til å mounte seksjoner før vi scroller
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => scrollToHash(hash));
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // ✅ Close on outside click + ESC
+  // Close on outside click + ESC
   useEffect(() => {
     const onDown = (e: MouseEvent) => {
       if (!open) return;
       const t = e.target as Node;
 
       if (btnRef.current && btnRef.current.contains(t)) return;
-      if (panelRef.current && !panelRef.current.contains(t)) setOpen(false);
+      if (panelRef.current && panelRef.current.contains(t)) return;
+
+      setOpen(false);
     };
 
     const onKey = (e: KeyboardEvent) => {
@@ -106,6 +108,7 @@ export default function PublicHeader({
     };
   }, [open]);
 
+  // Close menu when resizing to desktop
   useEffect(() => {
     const onResize = () => window.innerWidth >= 768 && setOpen(false);
     window.addEventListener("resize", onResize);
@@ -113,11 +116,22 @@ export default function PublicHeader({
   }, []);
 
   return (
-    <header className="sticky top-0 z-50">
-      {/* ✅ Grønn header (match resten av uttrykket) */}
+    <header ref={headerRef} className="sticky top-0 z-50">
+      {/* Grønn header bakgrunn */}
       <div className="border-b border-white/15 backdrop-blur bg-[linear-gradient(135deg,var(--mint),var(--cyan))]">
         <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-6">
-          <a href="#top" onClick={handleNav("#top")} className="flex items-center gap-3">
+          {/* Brand */}
+          <a
+            href="#top"
+            onClick={(e) => {
+              e.preventDefault();
+              setOpen(false);
+              window.history.pushState(null, "", "#top");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="flex items-center gap-3"
+            aria-label="Gå til toppen"
+          >
             <div className="h-9 w-9 rounded-2xl bg-white/25 ring-1 ring-white/25" />
             <div className="leading-tight">
               <div className="text-sm font-extrabold text-slate-900">{brand}</div>
@@ -152,7 +166,7 @@ export default function PublicHeader({
           </button>
         </div>
 
-        {/* Mobile panel */}
+        {/* Mobile menu */}
         <div
           id="mobile-menu"
           ref={panelRef}
@@ -178,8 +192,6 @@ export default function PublicHeader({
           </div>
         </div>
       </div>
-
-      <div id="top" />
     </header>
   );
 }

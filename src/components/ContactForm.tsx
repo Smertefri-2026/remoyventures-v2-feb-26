@@ -19,14 +19,13 @@ export default function ContactForm() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const form = formRef.current; // ✅ aldri null så lenge form finnes i DOM
+    const form = formRef.current;
     if (!form) {
       setState("error");
       setMsg("Skjemaet er ikke klart. Prøv igjen.");
       return;
     }
 
-    // (Valgfritt) krav om Turnstile
     if (!cfToken) {
       setState("error");
       setMsg("Bekreft at du er et menneske (Turnstile).");
@@ -43,7 +42,7 @@ export default function ContactForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...payload, cfToken }), // ✅ send token til server
+        body: JSON.stringify({ ...payload, cfToken }),
       });
 
       const data = await res.json().catch(() => ({}));
@@ -52,9 +51,8 @@ export default function ContactForm() {
       setState("sent");
       setMsg("Takk! Meldingen er sendt. Jeg svarer deg snart.");
 
-      // ✅ reset
       form.reset();
-      setCfToken(null); // tøm token etter send
+      setCfToken(null);
     } catch (err: any) {
       setState("error");
       setMsg(err?.message || "Noe gikk galt. Prøv igjen.");
@@ -62,37 +60,35 @@ export default function ContactForm() {
   }
 
   return (
-    <form ref={formRef} onSubmit={onSubmit} className="grid gap-4">
-      <div className="grid gap-2 sm:grid-cols-2">
-        <div>
+    <form ref={formRef} onSubmit={onSubmit} className="grid gap-4 min-w-0">
+      <div className="grid gap-2 sm:grid-cols-2 min-w-0">
+        <div className="min-w-0">
           <label className="text-xs font-extrabold text-slate-600">Navn</label>
           <input
             name="name"
             required
-            className="mt-1 w-full rounded-xl border border-[rgba(2,6,23,0.10)] bg-white/70 px-3 py-2 text-sm outline-none"
+            className="mt-1 w-full min-w-0 rounded-xl border border-[rgba(2,6,23,0.10)] bg-white/70 px-3 py-2 text-sm outline-none"
             placeholder="Fornavn og etternavn"
           />
         </div>
 
-        <div>
+        <div className="min-w-0">
           <label className="text-xs font-extrabold text-slate-600">E-post</label>
           <input
             name="email"
             type="email"
             required
-            className="mt-1 w-full rounded-xl border border-[rgba(2,6,23,0.10)] bg-white/70 px-3 py-2 text-sm outline-none"
+            className="mt-1 w-full min-w-0 rounded-xl border border-[rgba(2,6,23,0.10)] bg-white/70 px-3 py-2 text-sm outline-none"
             placeholder="navn@firma.no"
           />
         </div>
       </div>
 
-      <div>
-        <label className="text-xs font-extrabold text-slate-600">
-          Hva gjelder det?
-        </label>
+      <div className="min-w-0">
+        <label className="text-xs font-extrabold text-slate-600">Hva gjelder det?</label>
         <select
           name="topic"
-          className="mt-1 w-full rounded-xl border border-[rgba(2,6,23,0.10)] bg-white/70 px-3 py-2 text-sm outline-none"
+          className="mt-1 w-full min-w-0 rounded-xl border border-[rgba(2,6,23,0.10)] bg-white/70 px-3 py-2 text-sm outline-none"
           defaultValue="Nettside"
         >
           <option>Nettside</option>
@@ -104,30 +100,38 @@ export default function ContactForm() {
         </select>
       </div>
 
-      <div>
+      <div className="min-w-0">
         <label className="text-xs font-extrabold text-slate-600">Melding</label>
         <textarea
           name="message"
           required
           rows={6}
-          className="mt-1 w-full rounded-xl border border-[rgba(2,6,23,0.10)] bg-white/70 px-3 py-2 text-sm outline-none"
+          className="mt-1 w-full min-w-0 rounded-xl border border-[rgba(2,6,23,0.10)] bg-white/70 px-3 py-2 text-sm outline-none"
           placeholder="Fortell kort om hva du vil bygge, mål, tidslinje og ev. budsjett."
         />
       </div>
 
-      {/* ✅ Cloudflare Turnstile */}
-      <div className="pt-1">
+      {/* ✅ Cloudflare Turnstile – skaler på mobil, ingen horisontal overflow */}
+      <div className="pt-1 overflow-hidden">
         {!siteKey ? (
           <div className="text-sm text-red-700">
             Mangler NEXT_PUBLIC_TURNSTILE_SITE_KEY i miljøvariabler.
           </div>
         ) : (
-          <Turnstile
-            sitekey={siteKey}
-            onVerify={(token) => setCfToken(token)}
-            onExpire={() => setCfToken(null)}
-            onError={() => setCfToken(null)}
-          />
+          <div className="w-full">
+            {/* 
+              Turnstile er ~300px bred.
+              Vi skalerer den ned på små skjermer ved å bruke transform + fast origin.
+            */}
+            <div className="origin-left scale-[0.92] sm:scale-100">
+              <Turnstile
+                sitekey={siteKey}
+                onVerify={(token) => setCfToken(token)}
+                onExpire={() => setCfToken(null)}
+                onError={() => setCfToken(null)}
+              />
+            </div>
+          </div>
         )}
       </div>
 
@@ -146,8 +150,8 @@ export default function ContactForm() {
               state === "sent"
                 ? "text-emerald-700"
                 : state === "error"
-                  ? "text-red-700"
-                  : "text-slate-700"
+                ? "text-red-700"
+                : "text-slate-700"
             }`}
           >
             {msg}

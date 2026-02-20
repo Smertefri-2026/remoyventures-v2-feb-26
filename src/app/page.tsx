@@ -12,7 +12,6 @@ import Section8Contact from "@/app/sections/Section8Contact";
 export default function Home() {
   return (
     <main className="min-h-screen">
-      <div id="top" />
       <PublicHeader />
 
       <div className="mx-auto w-full max-w-6xl px-6">
