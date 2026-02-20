@@ -1,19 +1,37 @@
-// /Users/oystein/nettsider/remoyventures-v2-feb-26/src/components/ContactForm.tsx
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Turnstile from "react-turnstile";
 
 type FormState = "idle" | "sending" | "sent" | "error";
 
 export default function ContactForm() {
+  const formRef = useRef<HTMLFormElement | null>(null);
+
   const [state, setState] = useState<FormState>("idle");
   const [msg, setMsg] = useState<string>("");
+
+  // Turnstile token
+  const [cfToken, setCfToken] = useState<string | null>(null);
+
+  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    // ✅ Ta vare på form-referansen før await (e.currentTarget kan bli null etter await)
-    const form = e.currentTarget;
+    const form = formRef.current; // ✅ aldri null så lenge form finnes i DOM
+    if (!form) {
+      setState("error");
+      setMsg("Skjemaet er ikke klart. Prøv igjen.");
+      return;
+    }
+
+    // (Valgfritt) krav om Turnstile
+    if (!cfToken) {
+      setState("error");
+      setMsg("Bekreft at du er et menneske (Turnstile).");
+      return;
+    }
 
     setState("sending");
     setMsg("");
@@ -25,7 +43,7 @@ export default function ContactForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ ...payload, cfToken }), // ✅ send token til server
       });
 
       const data = await res.json().catch(() => ({}));
@@ -34,8 +52,9 @@ export default function ContactForm() {
       setState("sent");
       setMsg("Takk! Meldingen er sendt. Jeg svarer deg snart.");
 
-      // ✅ reset funker stabilt nå
+      // ✅ reset
       form.reset();
+      setCfToken(null); // tøm token etter send
     } catch (err: any) {
       setState("error");
       setMsg(err?.message || "Noe gikk galt. Prøv igjen.");
@@ -43,7 +62,7 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-4">
+    <form ref={formRef} onSubmit={onSubmit} className="grid gap-4">
       <div className="grid gap-2 sm:grid-cols-2">
         <div>
           <label className="text-xs font-extrabold text-slate-600">Navn</label>
@@ -68,7 +87,9 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label className="text-xs font-extrabold text-slate-600">Hva gjelder det?</label>
+        <label className="text-xs font-extrabold text-slate-600">
+          Hva gjelder det?
+        </label>
         <select
           name="topic"
           className="mt-1 w-full rounded-xl border border-[rgba(2,6,23,0.10)] bg-white/70 px-3 py-2 text-sm outline-none"
@@ -94,8 +115,28 @@ export default function ContactForm() {
         />
       </div>
 
+      {/* ✅ Cloudflare Turnstile */}
+      <div className="pt-1">
+        {!siteKey ? (
+          <div className="text-sm text-red-700">
+            Mangler NEXT_PUBLIC_TURNSTILE_SITE_KEY i miljøvariabler.
+          </div>
+        ) : (
+          <Turnstile
+            sitekey={siteKey}
+            onVerify={(token) => setCfToken(token)}
+            onExpire={() => setCfToken(null)}
+            onError={() => setCfToken(null)}
+          />
+        )}
+      </div>
+
       <div className="flex flex-wrap items-center gap-3">
-        <button type="submit" className="btn btn-mint" disabled={state === "sending"}>
+        <button
+          type="submit"
+          className="btn btn-mint"
+          disabled={state === "sending"}
+        >
           {state === "sending" ? "Sender…" : "Send forespørsel"}
         </button>
 
