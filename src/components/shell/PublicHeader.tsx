@@ -132,10 +132,10 @@ export default function PublicHeader({
             className="flex items-center gap-3"
             aria-label="Gå til toppen"
           >
-            <div className="h-9 w-9 rounded-2xl bg-white/25 ring-1 ring-white/25" />
             <div className="leading-tight">
-              <div className="text-sm font-extrabold text-slate-900">{brand}</div>
-            </div>
+<div className="font-brand text-lg sm:text-xl font-bold tracking-wide text-slate-900">
+  {brand}
+</div>            </div>
           </a>
 
           {/* Desktop nav */}
