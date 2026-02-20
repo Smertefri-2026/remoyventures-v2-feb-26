@@ -1,26 +1,243 @@
 @import "tailwindcss";
 
+/* ===========================
+   Remøy Ventures v2 (STABIL)
+   - Én kilde til sannhet
+   - Ingen dupliserte klasser
+   - “Dark UI” kun der vi velger det
+   =========================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Ink */
+  --ink: #0b1220;
+  --muted: rgba(11, 18, 32, 0.72);
+
+  /* Navy frame (ikke svart) */
+  --frame0: #0f1d3a;
+  --frame1: #142a52;
+
+  /* Neon/tech accents */
+  --mint:  #34d399;
+  --cyan:  #22d3ee;
+  --sky:   #60a5fa;
+  --lav:   #a78bfa;
+  --amber: #f59e0b;
+  --orange:#fb923c;
+
+  /* Surfaces */
+  --paper: rgba(255,255,255,0.92);
+  --paper2: rgba(255,255,255,0.86);
+  --paperBorder: rgba(15, 23, 42, 0.10);
+
+  --radius: 22px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Base */
+html, body {
+  min-height: 100%;
+  background:
+    radial-gradient(1100px 650px at 15% 0%, rgba(96,165,250,0.22), transparent 55%),
+    radial-gradient(1100px 650px at 85% 10%, rgba(34,211,238,0.18), transparent 55%),
+    radial-gradient(900px 600px at 20% 85%, rgba(167,139,250,0.16), transparent 55%),
+    radial-gradient(900px 600px at 85% 85%, rgba(52,211,153,0.14), transparent 60%),
+    linear-gradient(180deg, var(--frame1) 0%, var(--frame0) 60%, #0e1931 100%);
+  color: var(--ink);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+a { color: inherit; }
+section { scroll-margin-top: 76px; }
+::selection { background: rgba(34,211,238,0.22); }
+
+.h-font {
+  font-family: var(--font-geist-sans), system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+.h-tight { letter-spacing: -0.02em; }
+
+/* Wrapper */
+.wrap{
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 18px;
+}
+@media (min-width: 640px){ .wrap{ padding: 0 24px; } }
+@media (min-width: 1024px){ .wrap{ padding: 0 28px; } }
+
+/* Standard spacing mellom seksjoner */
+.section-gap{ margin-top: 18px; }
+@media (min-width: 640px){ .section-gap{ margin-top: 24px; } }
+@media (min-width: 1024px){ .section-gap{ margin-top: 28px; } }
+
+/* Cards */
+.paper {
+  background: var(--paper);
+  border: 1px solid var(--paperBorder);
+  border-radius: var(--radius);
+  color: var(--ink);
+  box-shadow: 0 20px 60px rgba(2, 6, 23, 0.18);
+}
+.paper-soft {
+  background: var(--paper2);
+  border: 1px solid var(--paperBorder);
+  border-radius: var(--radius);
+  color: var(--ink);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Section blocks (LYSE – aldri mørke) */
+.sec{
+  border-radius: calc(var(--radius) + 8px);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: 0 10px 26px rgba(2,6,23,0.14); /* mildere */
 }
+
+/* Background themes */
+.sec-cyan{
+  background:
+    radial-gradient(900px 420px at 10% 15%, rgba(34,211,238,0.55), transparent 60%),
+    radial-gradient(900px 420px at 90% 10%, rgba(96,165,250,0.45), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(245,251,255,0.92) 100%);
+}
+.sec-mint{
+  background:
+    radial-gradient(900px 420px at 10% 20%, rgba(52,211,153,0.48), transparent 60%),
+    radial-gradient(900px 420px at 90% 10%, rgba(34,211,238,0.22), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(246,255,251,0.92) 100%);
+}
+.sec-sky{
+  background:
+    radial-gradient(900px 420px at 10% 20%, rgba(96,165,250,0.48), transparent 60%),
+    radial-gradient(900px 420px at 90% 10%, rgba(34,211,238,0.22), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(245,250,255,0.92) 100%);
+}
+.sec-violet{
+  background:
+    radial-gradient(900px 420px at 12% 20%, rgba(167,139,250,0.48), transparent 60%),
+    radial-gradient(900px 420px at 90% 10%, rgba(96,165,250,0.18), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(251,250,255,0.92) 100%);
+}
+.sec-orange{
+  background:
+    radial-gradient(900px 420px at 10% 20%, rgba(245,158,11,0.40), transparent 60%),
+    radial-gradient(900px 420px at 90% 10%, rgba(251,146,60,0.28), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(255,250,242,0.92) 100%);
+}
+
+/* Pills */
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border-radius:999px;
+  padding:6px 10px;
+  background: rgba(255,255,255,0.90);
+  border:1px solid rgba(15,23,42,0.10);
+  color: rgba(11,18,32,0.78);
+}
+/* HERO (brukes i Section1Hero) */
+.sec-hero{
+  background:
+    radial-gradient(900px 420px at 10% 15%, rgba(34,211,238,0.55), transparent 60%),
+    radial-gradient(900px 420px at 90% 10%, rgba(96,165,250,0.45), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(245,251,255,0.92) 100%);
+}
+
+/* Pills – themed variants (brukes i chips + label) */
+.pill-mint{
+  background: linear-gradient(135deg, rgba(52,211,153,0.22), rgba(34,211,238,0.14));
+  border: 1px solid rgba(15,23,42,0.10);
+  color: rgba(11,18,32,0.85);
+}
+
+.pill-sky{
+  background: linear-gradient(135deg, rgba(96,165,250,0.22), rgba(34,211,238,0.12));
+  border: 1px solid rgba(15,23,42,0.10);
+  color: rgba(11,18,32,0.85);
+}
+
+.pill-lav{
+  background: linear-gradient(135deg, rgba(167,139,250,0.22), rgba(96,165,250,0.12));
+  border: 1px solid rgba(15,23,42,0.10);
+  color: rgba(11,18,32,0.85);
+}
+
+.pill-amber{
+  background: linear-gradient(135deg, rgba(245,158,11,0.22), rgba(251,146,60,0.12));
+  border: 1px solid rgba(15,23,42,0.10);
+  color: rgba(11,18,32,0.85);
+}
+
+/* Soft chips for tags (Eierskap/Produkt/...) */
+.pill-chip{
+  background: rgba(255,255,255,0.72);
+  border: 1px solid rgba(15,23,42,0.10);
+  color: rgba(11,18,32,0.78);
+}
+
+/* Dark pill ONLY when we want contrast (top hero label) */
+.pill-dark{
+  background: rgba(11,18,32,0.88);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: rgba(255,255,255,0.92);
+}
+
+.dot{ height:8px; width:8px; border-radius:999px; display:inline-block; }
+.dot-cyan{ background: linear-gradient(135deg, var(--cyan), var(--sky)); }
+
+/* Buttons */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.5rem;
+  padding:.75rem 1.05rem;
+  border-radius:999px;
+  font-weight:800;
+  font-size:14px;
+  user-select:none;
+  transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+}
+.btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
+.btn:active{ transform: translateY(0px); }
+
+/* Dark CTA (hero only) */
+.btn-dark{
+  background: rgba(11,18,32,0.92);
+  color: rgba(255,255,255,0.92);
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: 0 16px 40px rgba(2,6,23,0.20);
+}
+.btn-dark-outline{
+  background: rgba(11,18,32,0.10);
+  color: rgba(11,18,32,0.90);
+  border: 1px solid rgba(11,18,32,0.18);
+}
+
+/* Light buttons (used everywhere else) */
+.btn-mint{
+  background: linear-gradient(135deg, var(--mint), var(--cyan));
+  color:#05201c;
+  border:1px solid rgba(34,211,238,0.18);
+  box-shadow:0 16px 40px rgba(34,211,238,0.18);
+}
+.btn-amber{
+  background: linear-gradient(135deg, var(--amber), var(--orange));
+  color:#221408;
+  border:1px solid rgba(245,158,11,0.22);
+  box-shadow:0 16px 40px rgba(245,158,11,0.16);
+}
+.btn-ghost{
+  background: rgba(255,255,255,0.86);
+  color: rgba(11,18,32,0.92);
+  border: 1px solid rgba(15,23,42,0.10);
+}
+
+/* Equal height */
+.equal-card{
+  display:flex;
+  flex-direction:column;
+  min-height:170px;
+}
+@media (min-width:768px){ .equal-card{ min-height:180px; } }
+.equal-card .push-bottom{ margin-top:auto; padding-top:14px; }
+
