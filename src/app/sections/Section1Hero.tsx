@@ -19,11 +19,17 @@ export default function Section1Hero() {
             Remøy Ventures
           </h1>
 
-         <p className="mt-4 text-base leading-relaxed text-slate-900">
-  Remøy Ventures eies av Øystein Solheim Remøy og bygger selskaper og konsepter innen helse, trening og teknologi. I dag eier jeg SmerteFri AS og PT Tjenester AS, og utvikler plattformer og merkevarer med fokus på ytelse og skalerbar drift. Jeg bygger også nettsider, nettbutikker og apper for utvalgte aktører – kodebasert for maksimal kontroll og kvalitet.
-</p>
+          <p className="mt-4 text-base leading-relaxed text-slate-900">
+            Remøy Ventures eies av Øystein Solheim Remøy og bygger selskaper og konsepter innen helse,
+            trening og teknologi. I dag eier jeg SmerteFri AS og PT Tjenester AS, og utvikler plattformer
+            og merkevarer med fokus på ytelse og skalerbar drift. Jeg bygger også nettsider, nettbutikker
+            og apper for utvalgte aktører – kodebasert for maksimal kontroll og kvalitet.{" "}
+            <span className="font-extrabold">
+              For riktige caser vurderer vi også partner-/investor samarbeid.
+            </span>
+          </p>
 
-          {/* CTA – mer farge (mint + amber) */}
+          {/* CTA */}
           <div className="mt-7 flex flex-wrap gap-3">
             <a className="btn btn-mint" href="#prosjekter">
               Se prosjektene
@@ -31,17 +37,20 @@ export default function Section1Hero() {
             <a className="btn btn-amber" href="#kontakt">
               Ta kontakt
             </a>
+            <a className="btn btn-ghost" href="#muligheter">
+              For investorer ↗
+            </a>
           </div>
 
-          {/* Chips – SAMME farge (mint), som du ønsket */}
-<div className="mt-6 flex flex-wrap gap-2 text-xs">
-  <span className="pill pill-mint">Nettsider</span>
-  <span className="pill pill-sky">Nettbutikker</span>
-  <span className="pill pill-lav">Apper / portaler</span>
-  <span className="pill pill-amber">SEO & konvertering</span>
-  <span className="pill pill-mint">Automatisering</span>
-</div>
-
+          {/* Chips */}
+          <div className="mt-6 flex flex-wrap gap-2 text-xs">
+            <span className="pill pill-mint">Nettsider</span>
+            <span className="pill pill-sky">Nettbutikker</span>
+            <span className="pill pill-lav">Apper / portaler</span>
+            <span className="pill pill-amber">SEO & konvertering</span>
+            <span className="pill pill-mint">Automatisering</span>
+            <span className="pill pill-sky">Investor / partner</span>
+          </div>
         </div>
       </div>
     </section>

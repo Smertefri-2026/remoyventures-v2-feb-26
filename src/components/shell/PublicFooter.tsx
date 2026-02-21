@@ -76,7 +76,7 @@ export default function PublicFooter() {
               </div>
 
               <div className="mt-4 text-xs text-slate-900/70">
-                Org.nr / juridisk info kan legges inn her senere.
+                Org.nr 936 156 851
               </div>
             </div>
           </div>

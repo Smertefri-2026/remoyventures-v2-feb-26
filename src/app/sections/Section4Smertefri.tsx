@@ -2,11 +2,19 @@ import Image from "next/image";
 
 export default function Section4Smertefri() {
   return (
-    <section className="mt-12">
+    <section id="prosjekter" className="mt-12">
+      {/* ✅ Hvit overskrift over prosjekt-seksjon */}
+      <div className="mb-6">
+        <h2 className="h-font text-2xl font-extrabold text-white">Egne prosjekter</h2>
+        <p className="mt-2 text-sm text-white/70">
+          Konsepter og plattformer vi bygger og eier.
+        </p>
+      </div>
+
       <div className="sec sec-mint p-7 sm:p-10">
         <div className="grid gap-6 md:grid-cols-2 md:items-center">
-          {/* Text */}
-          <div className="max-w-2xl">
+          {/* ✅ Text (mobil: øverst, md+: venstre) */}
+          <div className="order-1 md:order-1 max-w-2xl">
             <div className="pill pill-mint text-xs font-extrabold w-fit">
               <span
                 className="h-2 w-2 rounded-full"
@@ -49,31 +57,30 @@ export default function Section4Smertefri() {
             </div>
           </div>
 
-{/* Image (med telefonramme fra PNG) */}
-<div className="order-2 md:order-1 flex justify-center">
-  <div className="w-full max-w-40">
-    <div
-      className="relative aspect-740/1508 overflow-hidden"
-      style={{
-        borderRadius: 20,
-        WebkitMaskImage: "radial-gradient(white 96%, transparent 100%)",
-        maskImage: "radial-gradient(white 96%, transparent 100%)",
-      }}
-    >
-      <Image
-        src="/SmerteFri2.png"
-        alt="SmerteFri – mobilvisning"
-        fill
-        className="object-contain drop-shadow-[0_20px_60px_rgba(2,6,23,0.25)]"
-        sizes="(max-width: 768px) 85vw, 360px"
-        priority={false}
-      />
-    </div>
-  </div>
-</div>
-                </div>
+          {/* ✅ Image (mobil: nederst, md+: høyre) */}
+          <div className="order-2 md:order-2 flex justify-center">
+            <div className="w-full max-w-40">
+              <div
+                className="relative aspect-740/1508 overflow-hidden"
+                style={{
+                  borderRadius: 20,
+                  WebkitMaskImage: "radial-gradient(white 96%, transparent 100%)",
+                  maskImage: "radial-gradient(white 96%, transparent 100%)",
+                }}
+              >
+                <Image
+                  src="/SmerteFri2.png"
+                  alt="SmerteFri – mobilvisning"
+                  fill
+                  className="object-contain drop-shadow-[0_20px_60px_rgba(2,6,23,0.25)]"
+                  sizes="(max-width: 768px) 85vw, 360px"
+                  priority={false}
+                />
+              </div>
+            </div>
+          </div>
         </div>
-
+      </div>
     </section>
   );
 }
