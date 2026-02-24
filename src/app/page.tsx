@@ -6,7 +6,6 @@ import Section2Investors from "@/app/sections/Section2Investors";
 import Section3ProjectsGrid from "@/app/sections/Section3ProjectsGrid";
 import Section4Smertefri from "@/app/sections/Section4Smertefri";
 import Section5Smooday from "@/app/sections/Section5Smooday";
-import Section6PTCrew from "@/app/sections/Section6PTCrew";
 import Section8Contact from "@/app/sections/Section8Contact";
 
 export default function Home() {
@@ -22,7 +21,6 @@ export default function Home() {
         <Section3ProjectsGrid />
         <Section4Smertefri />
         <Section5Smooday />
-        <Section6PTCrew />
         <Section8Contact />
       </div>
 

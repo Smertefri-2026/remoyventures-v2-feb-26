@@ -35,13 +35,7 @@ export default function PublicFooter() {
                   >
                     SmerteFri
                   </a>
-                  <a
-                    href="https://ptcrew.no"
-                    className="rounded-full bg-white/25 px-4 py-2 text-xs font-extrabold text-slate-900 ring-1 ring-white/25 hover:bg-white/35 transition"
-                  >
-                    PTCrew
-                  </a>
-                  <a
+                          <a
                     href="https://smood.day"
                     className="rounded-full bg-white/25 px-4 py-2 text-xs font-extrabold text-slate-900 ring-1 ring-white/25 hover:bg-white/35 transition"
                   >
