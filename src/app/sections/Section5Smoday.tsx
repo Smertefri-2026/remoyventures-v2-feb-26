@@ -33,9 +33,10 @@ export default function Section5Smoday() {
               <li>• Sterk merkevare: tech + natur i samme uttrykk.</li>
             </ul>
 
-            <div className="mt-6">
+            {/* ✅ Samme knappestil som Section4 (kun “Besøk”) */}
+            <div className="mt-6 flex flex-wrap gap-3">
               <a
-                className="btn btn-sky"
+                className="btn btn-mint"
                 href="https://smooday.com"
                 target="_blank"
                 rel="noreferrer"
@@ -45,32 +46,30 @@ export default function Section5Smoday() {
             </div>
           </div>
 
-
-{/* Image (med telefonramme fra PNG) */}
-<div className="order-2 md:order-1 flex justify-center">
-  <div className="w-full max-w-40">
-    <div
-      className="relative aspect-740/1508 overflow-hidden"
-      style={{
-        borderRadius: 20,
-        WebkitMaskImage: "radial-gradient(white 96%, transparent 100%)",
-        maskImage: "radial-gradient(white 96%, transparent 100%)",
-      }}
-    >
-      <Image
-        src="/Smood.day5.png"
-        alt="Smood.day – mobilvisning"
-        fill
-        className="object-contain drop-shadow-[0_20px_60px_rgba(2,6,23,0.25)]"
-        sizes="(max-width: 768px) 85vw, 360px"
-        priority={false}
-      />
-    </div>
-  </div>
-</div>
-                </div>
+          {/* Image (mobil: nederst, md+: venstre) */}
+          <div className="order-2 md:order-1 flex justify-center">
+            <div className="w-full max-w-40">
+              <div
+                className="relative aspect-740/1508 overflow-hidden"
+                style={{
+                  borderRadius: 20,
+                  WebkitMaskImage: "radial-gradient(white 96%, transparent 100%)",
+                  maskImage: "radial-gradient(white 96%, transparent 100%)",
+                }}
+              >
+                <Image
+                  src="/Smood.day5.png"
+                  alt="Smood.day – mobilvisning"
+                  fill
+                  className="object-contain drop-shadow-[0_20px_60px_rgba(2,6,23,0.25)]"
+                  sizes="(max-width: 768px) 85vw, 360px"
+                  priority={false}
+                />
+              </div>
+            </div>
+          </div>
         </div>
-
+      </div>
     </section>
   );
 }
