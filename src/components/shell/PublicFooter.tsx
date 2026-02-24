@@ -39,7 +39,7 @@ export default function PublicFooter() {
                     href="https://smood.day"
                     className="rounded-full bg-white/25 px-4 py-2 text-xs font-extrabold text-slate-900 ring-1 ring-white/25 hover:bg-white/35 transition"
                   >
-                    Smood.day
+                    Smoday
                   </a>
                 </div>
               </div>

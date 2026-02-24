@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function Section5Smooday() {
+export default function Section5Smoday() {
   return (
     <section className="mt-8">
       <div className="sec sec-cyan p-7 sm:p-10">
@@ -18,7 +18,7 @@ export default function Section5Smooday() {
             </div>
 
             <h3 className="mt-3 h-font text-2xl font-extrabold text-slate-900">
-              Smooday
+              Smoday
             </h3>
 
             <p className="mt-3 text-sm leading-relaxed text-slate-700">
@@ -58,7 +58,7 @@ export default function Section5Smooday() {
       }}
     >
       <Image
-        src="/Smood.day2.png"
+        src="/Smood.day5.png"
         alt="Smood.day – mobilvisning"
         fill
         className="object-contain drop-shadow-[0_20px_60px_rgba(2,6,23,0.25)]"
