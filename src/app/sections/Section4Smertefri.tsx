@@ -31,8 +31,7 @@ export default function Section4Smertefri() {
 
             <p className="mt-3 text-sm leading-relaxed text-slate-700">
               Et rehab- og treningskonsept som kombinerer struktur, progresjon og
-              teknologi – uten “støyen” fra tradisjonelle treningssentre. Målet
-              er et nasjonalt nettverk av SmerteFri-sentre og en plattform som
+              teknologi. Målet er et nasjonalt nettverk av SmerteFri-sentre og en plattform som
               gjør oppfølging enklere for både kunder og trenere.
             </p>
 
