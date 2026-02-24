@@ -37,11 +37,11 @@ export default function Section5Smoday() {
             <div className="mt-6 flex flex-wrap gap-3">
               <a
                 className="btn btn-mint"
-                href="https://smooday.com"
+                href="https://smoday.com"
                 target="_blank"
                 rel="noreferrer"
               >
-                Besøk smooday.com ↗
+                Besøk smoday.com ↗
               </a>
             </div>
           </div>
