@@ -20,13 +20,13 @@ const cinzel = Cinzel({
 });
 
 export const metadata: Metadata = {
-  title: "Remøy Ventures",
+  title: "Remøy Ventures – Fast partner for digital utvikling",
   description:
-    "Holding og venture builder – vi bygger og skalerer konsepter innen helse, trening og teknologi.",
+    "Remøy Ventures hjelper etablerte virksomheter med nettsider, nettbutikker, kundeportaler, webapper og automatisering – som et langsiktig samarbeid. Utviklingsprosjekter fra 100 000 kr eks. mva.",
   openGraph: {
-    title: "Remøy Ventures",
+    title: "Remøy Ventures – Fast partner for digital utvikling",
     description:
-      "Holding og venture builder – vi bygger og skalerer konsepter innen helse, trening og teknologi.",
+      "Nettsider, nettbutikker, kundeportaler, webapper og automatisering – som et langsiktig samarbeid, bygget på over 30 års erfaring med virksomhetsdrift og kundeansvar.",
     url: "https://remoyventures.no",
     siteName: "Remøy Ventures",
     type: "website",

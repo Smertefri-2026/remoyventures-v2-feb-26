@@ -5,9 +5,10 @@ export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   try {
-    const { name, email, topic, message, cfToken } = await req.json();
+    const { name, email, company, topic, message, budget, startTime, cfToken } =
+      await req.json();
 
-    if (!name || !email || !message) {
+    if (!name || !email || !company || !message) {
       return NextResponse.json({ error: "Mangler felter." }, { status: 400 });
     }
 
@@ -49,18 +50,26 @@ export async function POST(req: Request) {
       from,
       to,
       replyTo: email,
-      subject: `[Remøy Ventures] ${topic || "Forespørsel"} — ${name}`,
-      text: `Navn: ${name}\nE-post: ${email}\nTema: ${topic}\n\nMelding:\n${message}\n`,
+      subject: `[Remøy Ventures] ${topic || "Forespørsel"} — ${company}`,
+      text: `Virksomhet: ${company}\nKontaktperson: ${name}\nE-post: ${email}\nHva gjelder det: ${topic}\nBudsjettramme: ${budget}\nØnsket oppstart: ${startTime}\n\nBehov:\n${message}\n`,
     });
 
     console.log("Resend result:", result);
 
-    // result pleier å inneholde { data: { id: ... } } eller { id: ... } avhengig av sdk-versjon
-    const id = (result as any)?.data?.id || (result as any)?.id || null;
+    // Resend returnerer { data: null, error: {...} } ved feil (f.eks. uverifisert
+    // sender-domene) UTEN å kaste en exception - må sjekkes eksplisitt, ellers
+    // rapporterer vi "sendt" til brukeren selv om e-posten aldri ble levert.
+    if (result.error) {
+      return NextResponse.json(
+        { error: `E-posttjenesten avviste meldingen: ${result.error.message}` },
+        { status: 502 }
+      );
+    }
 
-    return NextResponse.json({ ok: true, id });
-  } catch (e: any) {
+    return NextResponse.json({ ok: true, id: result.data?.id ?? null });
+  } catch (e: unknown) {
     console.error("Contact error:", e);
-    return NextResponse.json({ error: e?.message || "Ukjent feil." }, { status: 500 });
+    const message = e instanceof Error ? e.message : "Ukjent feil.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

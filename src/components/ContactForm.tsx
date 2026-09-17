@@ -5,13 +5,38 @@ import Turnstile from "react-turnstile";
 
 type FormState = "idle" | "sending" | "sent" | "error";
 
-export default function ContactForm() {
+const DEFAULT_TOPICS = [
+  "Nettside / nettbutikk",
+  "Kundeportal / webapp / integrasjon",
+  "Automatisering / KI i arbeidsprosess",
+  "Annet",
+];
+
+const BUDGET_RANGES = [
+  "Under 100 000 kr",
+  "100 000–300 000 kr",
+  "300 000–750 000 kr",
+  "Over 750 000 kr",
+  "Vet ikke ennå",
+];
+
+const START_OPTIONS = [
+  "Så snart som mulig",
+  "Innen 3 måneder",
+  "Senere i år",
+  "Ingen bestemt frist – vil bare ta en samtale",
+];
+
+export default function ContactForm({
+  topics = DEFAULT_TOPICS,
+}: {
+  topics?: string[];
+}) {
   const formRef = useRef<HTMLFormElement | null>(null);
 
   const [state, setState] = useState<FormState>("idle");
   const [msg, setMsg] = useState<string>("");
 
-  // Turnstile token
   const [cfToken, setCfToken] = useState<string | null>(null);
 
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
@@ -49,13 +74,13 @@ export default function ContactForm() {
       if (!res.ok) throw new Error(data?.error || "Noe gikk galt.");
 
       setState("sent");
-      setMsg("Takk! Meldingen er sendt. Jeg svarer deg snart.");
+      setMsg("Takk! Forespørselen er sendt. Jeg svarer deg snart.");
 
       form.reset();
       setCfToken(null);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setState("error");
-      setMsg(err?.message || "Noe gikk galt. Prøv igjen.");
+      setMsg(err instanceof Error ? err.message : "Noe gikk galt. Prøv igjen.");
     }
   }
 
@@ -63,7 +88,17 @@ export default function ContactForm() {
     <form ref={formRef} onSubmit={onSubmit} className="grid gap-4 min-w-0">
       <div className="grid gap-2 sm:grid-cols-2 min-w-0">
         <div className="min-w-0">
-          <label className="text-xs font-extrabold text-slate-600">Navn</label>
+          <label className="text-xs font-extrabold text-slate-600">Virksomhet</label>
+          <input
+            name="company"
+            required
+            className="mt-1 w-full min-w-0 rounded-xl border border-[rgba(2,6,23,0.10)] bg-white/70 px-3 py-2 text-sm outline-none"
+            placeholder="Bedriftens navn"
+          />
+        </div>
+
+        <div className="min-w-0">
+          <label className="text-xs font-extrabold text-slate-600">Kontaktperson</label>
           <input
             name="name"
             required
@@ -71,7 +106,9 @@ export default function ContactForm() {
             placeholder="Fornavn og etternavn"
           />
         </div>
+      </div>
 
+      <div className="grid gap-2 sm:grid-cols-2 min-w-0">
         <div className="min-w-0">
           <label className="text-xs font-extrabold text-slate-600">E-post</label>
           <input
@@ -82,36 +119,62 @@ export default function ContactForm() {
             placeholder="navn@firma.no"
           />
         </div>
+
+        <div className="min-w-0">
+          <label className="text-xs font-extrabold text-slate-600">Hva gjelder det?</label>
+          <select
+            name="topic"
+            className="mt-1 w-full min-w-0 rounded-xl border border-[rgba(2,6,23,0.10)] bg-white/70 px-3 py-2 text-sm outline-none"
+            defaultValue={topics[0]}
+          >
+            {topics.map((t) => (
+              <option key={t}>{t}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="min-w-0">
-        <label className="text-xs font-extrabold text-slate-600">Hva gjelder det?</label>
-        <select
-          name="topic"
-          className="mt-1 w-full min-w-0 rounded-xl border border-[rgba(2,6,23,0.10)] bg-white/70 px-3 py-2 text-sm outline-none"
-          defaultValue="Nettside"
-        >
-          <option>Nettside</option>
-          <option>Nettbutikk</option>
-          <option>App / portal</option>
-          <option>SEO / konvertering</option>
-          <option>Automatisering</option>
-          <option>Investering / pitch</option>
-        </select>
-      </div>
-
-      <div className="min-w-0">
-        <label className="text-xs font-extrabold text-slate-600">Melding</label>
+        <label className="text-xs font-extrabold text-slate-600">Kort om behovet</label>
         <textarea
           name="message"
           required
-          rows={6}
+          rows={5}
           className="mt-1 w-full min-w-0 rounded-xl border border-[rgba(2,6,23,0.10)] bg-white/70 px-3 py-2 text-sm outline-none"
-          placeholder="Fortell kort om hva du vil bygge, mål, tidslinje og ev. budsjett."
+          placeholder="Hva vil dere løse eller bygge? Gjerne litt om nåsituasjonen."
         />
       </div>
 
-      {/* ✅ Cloudflare Turnstile – skaler på mobil, ingen horisontal overflow */}
+      <div className="grid gap-2 sm:grid-cols-2 min-w-0">
+        <div className="min-w-0">
+          <label className="text-xs font-extrabold text-slate-600">Budsjettramme</label>
+          <select
+            name="budget"
+            required
+            className="mt-1 w-full min-w-0 rounded-xl border border-[rgba(2,6,23,0.10)] bg-white/70 px-3 py-2 text-sm outline-none"
+            defaultValue={BUDGET_RANGES[BUDGET_RANGES.length - 1]}
+          >
+            {BUDGET_RANGES.map((b) => (
+              <option key={b}>{b}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="min-w-0">
+          <label className="text-xs font-extrabold text-slate-600">Ønsket oppstart</label>
+          <select
+            name="startTime"
+            required
+            className="mt-1 w-full min-w-0 rounded-xl border border-[rgba(2,6,23,0.10)] bg-white/70 px-3 py-2 text-sm outline-none"
+            defaultValue={START_OPTIONS[START_OPTIONS.length - 1]}
+          >
+            {START_OPTIONS.map((s) => (
+              <option key={s}>{s}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
       <div className="pt-1 overflow-hidden">
         {!siteKey ? (
           <div className="text-sm text-red-700">
@@ -119,10 +182,6 @@ export default function ContactForm() {
           </div>
         ) : (
           <div className="w-full">
-            {/* 
-              Turnstile er ~300px bred.
-              Vi skalerer den ned på små skjermer ved å bruke transform + fast origin.
-            */}
             <div className="origin-left scale-[0.92] sm:scale-100">
               <Turnstile
                 sitekey={siteKey}

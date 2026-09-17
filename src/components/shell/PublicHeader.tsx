@@ -7,8 +7,8 @@ type Item = { href: string; label: string };
 export default function PublicHeader({
   brand = "Remøy Ventures",
   links = [
-    { href: "#prosjekter", label: "Prosjekter" },
-    { href: "#muligheter", label: "Muligheter" },
+    { href: "#leveranser", label: "Leveranser" },
+    { href: "#samarbeid", label: "Samarbeid" },
     { href: "#kontakt", label: "Kontakt" },
   ],
 }: {

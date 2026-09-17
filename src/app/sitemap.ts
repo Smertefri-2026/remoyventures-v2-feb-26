@@ -4,7 +4,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://remoyventures.no";
   const now = new Date();
 
-  // Oppdater listen hvis du har flere routes
+  // Oppdater listen hvis du har flere routes.
   const routes = ["/"];
 
   return routes.map((path) => ({
