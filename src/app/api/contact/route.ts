@@ -3,10 +3,43 @@ import { Resend } from "resend";
 
 export const runtime = "nodejs";
 
+// Enkel rate-begrensning per IP (best-effort: tilbakestilles ved kald start
+// på serverless hosting, men begrenser innsendinger fra samme varme instans).
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const RATE_LIMIT_MAX = 5;
+const submissions = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const timestamps = (submissions.get(ip) ?? []).filter(
+    (t) => now - t < RATE_LIMIT_WINDOW_MS
+  );
+  timestamps.push(now);
+  submissions.set(ip, timestamps);
+  return timestamps.length > RATE_LIMIT_MAX;
+}
+
 export async function POST(req: Request) {
   try {
-    const { name, email, company, topic, message, budget, startTime, cfToken } =
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("x-real-ip") ||
+      "unknown";
+
+    if (isRateLimited(ip)) {
+      return NextResponse.json(
+        { error: "For mange forespørsler. Prøv igjen om litt." },
+        { status: 429 }
+      );
+    }
+
+    const { name, email, company, topic, message, budget, startTime, cfToken, website } =
       await req.json();
+
+    // Honeypot: skal alltid være tomt for ekte besøkende.
+    if (website) {
+      return NextResponse.json({ error: "Ugyldig innsending." }, { status: 400 });
+    }
 
     if (!name || !email || !company || !message) {
       return NextResponse.json({ error: "Mangler felter." }, { status: 400 });
@@ -24,12 +57,19 @@ export async function POST(req: Request) {
     const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ secret: turnstileSecret, response: cfToken }),
+      body: new URLSearchParams({ secret: turnstileSecret, response: cfToken, remoteip: ip }),
     });
 
-    const verifyData = (await verifyRes.json()) as { success?: boolean };
+    const verifyData = (await verifyRes.json()) as {
+      success?: boolean;
+      "error-codes"?: string[];
+    };
     if (!verifyData?.success) {
-      return NextResponse.json({ error: "Turnstile-verifisering feilet. Prøv igjen." }, { status: 400 });
+      console.error("Turnstile siteverify failed:", verifyData?.["error-codes"]);
+      return NextResponse.json(
+        { error: "Turnstile-verifisering feilet. Prøv igjen." },
+        { status: 400 }
+      );
     }
 
     // Resend

@@ -38,6 +38,7 @@ export default function ContactForm({
   const [msg, setMsg] = useState<string>("");
 
   const [cfToken, setCfToken] = useState<string | null>(null);
+  const [cfError, setCfError] = useState<string | null>(null);
 
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
@@ -86,6 +87,28 @@ export default function ContactForm({
 
   return (
     <form ref={formRef} onSubmit={onSubmit} className="grid gap-4 min-w-0">
+      {/* Honeypot: usynlig for mennesker (fjernet fra layout, ikke fra a11y-treet
+          via display:none/visibility:hidden), men fylles ofte ut av bots. */}
+      <div
+        style={{
+          position: "absolute",
+          left: "-9999px",
+          width: "1px",
+          height: "1px",
+          overflow: "hidden",
+        }}
+        aria-hidden="true"
+      >
+        <label htmlFor="website">La stå tomt</label>
+        <input
+          type="text"
+          id="website"
+          name="website"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+
       <div className="grid gap-2 sm:grid-cols-2 min-w-0">
         <div className="min-w-0">
           <label className="text-xs font-extrabold text-slate-600">Virksomhet</label>
@@ -185,11 +208,23 @@ export default function ContactForm({
             <div className="origin-left scale-[0.92] sm:scale-100">
               <Turnstile
                 sitekey={siteKey}
-                onVerify={(token) => setCfToken(token)}
+                onVerify={(token) => {
+                  setCfToken(token);
+                  setCfError(null);
+                }}
                 onExpire={() => setCfToken(null)}
-                onError={() => setCfToken(null)}
+                onError={(error) => {
+                  setCfToken(null);
+                  setCfError(error);
+                  console.error("Turnstile error code:", error);
+                }}
               />
             </div>
+            {cfError && (
+              <div className="mt-2 text-xs text-red-700">
+                Turnstile feilkode: {cfError}
+              </div>
+            )}
           </div>
         )}
       </div>
