@@ -66,8 +66,14 @@ export async function POST(req: Request) {
     };
     if (!verifyData?.success) {
       console.error("Turnstile siteverify failed:", verifyData?.["error-codes"]);
+      // MIDLERTIDIG DIAGNOSTIKK: bevis at siteverify faktisk kalles ved å
+      // sende Cloudflares egne (ikke-hemmelige) feilkoder tilbake. Fjernes
+      // rett etter verifisering - se commit-historikk.
       return NextResponse.json(
-        { error: "Turnstile-verifisering feilet. Prøv igjen." },
+        {
+          error: "Turnstile-verifisering feilet. Prøv igjen.",
+          _diag_cloudflare_error_codes: verifyData?.["error-codes"] ?? null,
+        },
         { status: 400 }
       );
     }
