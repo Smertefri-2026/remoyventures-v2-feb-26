@@ -14,15 +14,15 @@ export default function Section1Hero() {
           </div>
 
           <h1 className="mt-4 h-font h-tight text-4xl font-extrabold sm:text-5xl">
-            Fast partner for digital utvikling
+            Jeg motiveres av å hjelpe bedrifter som vil ta en posisjon i markedet.
           </h1>
 
           <p className="mt-4 text-base leading-relaxed text-slate-900">
-            Remøy Ventures hjelper etablerte virksomheter med nettsider og nettbutikker,
-            kundeportaler og webapper, og automatisering av arbeidsprosesser – som et
-            langsiktig samarbeid, ikke enkeltstående oppdrag. Du får én fast kontakt med
-            ansvar for fremdrift og leveranse, bygget på over 30 års erfaring med
-            virksomhetsdrift, kundeansvar og større prosjekter.
+            30 års bransjeerfaring – fra papir og blyant til digitale løsninger og
+            KI-agenter. Jeg hjelper etablerte virksomheter med nettsider og
+            nettbutikker, kundeportaler og webapper, og automatisering av
+            arbeidsprosesser – som et langsiktig samarbeid, ikke enkeltstående
+            oppdrag. Du får én fast kontakt med ansvar for fremdrift og leveranse.
           </p>
 
           <div className="mt-7 flex flex-wrap gap-3">
