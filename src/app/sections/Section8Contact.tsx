@@ -37,6 +37,14 @@ export default function Section8Contact() {
           </div>
 
           <div className="mt-6 paper p-5 sm:p-6 overflow-hidden">
+            {/* MIDLERTIDIG: e-postleveranse (Resend) venter fortsatt på
+                domeneverifisering (DNS). Fjern denne varselboksen når
+                send.remoyventures.no viser "verified" hos Resend. */}
+            <div className="mb-4 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+              E-postleveransen for skjemaet er under aktivering. Innsendinger
+              kan i en kort periode feile med en tydelig feilmelding – prøv
+              gjerne igjen litt senere hvis det skjer.
+            </div>
             <ContactForm />
           </div>
 
